@@ -5,8 +5,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'SightLoop Developer Notes',
-  tagline: 'Vision service architecture, roadmap, and implementation notes',
+  title: 'SightLoop Vision Developer Notes',
+  tagline: 'Vision pipeline architecture, roadmap, and implementation notes',
   favicon: 'img/sightloop-mark.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -68,7 +68,7 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'SightLoop',
+      title: 'SightLoop Vision',
       logo: {
         alt: 'SightLoop logo',
         src: 'img/sightloop-mark.svg',
@@ -78,7 +78,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'developerNotesSidebar',
           position: 'left',
-          label: 'Developer Notes',
+          label: 'Vision Notes',
         },
         {
           href: 'https://github.com/veerthiara/sightloop',
@@ -94,7 +94,7 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Developer Notes',
+              label: 'Vision Developer Notes',
               to: '/',
             },
           ],

@@ -1,6 +1,6 @@
-# SightLoop Site
+# SightLoop Vision Site
 
-This directory contains the documentation site for SightLoop.
+This directory contains the documentation site for SightLoop Vision.
 
 Useful commands:
 

@@ -2,7 +2,7 @@
 
 ## Goal
 
-Set up a developer-facing documentation site for SightLoop that publishes the existing project docs with structured sidebar navigation.
+Set up a developer-facing documentation site for SightLoop Vision that publishes the existing project docs with structured sidebar navigation.
 
 ## Scope
 

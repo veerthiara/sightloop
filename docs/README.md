@@ -1,11 +1,11 @@
 ---
 id: developer-notes
-title: Developer Notes
+title: SightLoop Vision Developer Notes
 slug: /
 sidebar_position: 1
 ---
 
-# Developer Notes
+# SightLoop Vision Developer Notes
 
 This directory separates long-lived planning from execution notes.
 
@@ -19,7 +19,7 @@ Use implementation docs to record how each revision was actually executed and wh
 
 ## Site purpose
 
-This site is the working documentation hub for SightLoop.
+This site is the working documentation hub for SightLoop Vision.
 
 It is intentionally developer-facing rather than end-user-facing.
 
