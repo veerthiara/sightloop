@@ -11,7 +11,7 @@ In scope:
 - repository directory structure
 - roadmap and architecture doc organization
 - implementation note workflow
-- local agent and Copilot instructions
+- repository instruction files
 - local infrastructure folder setup
 
 Out of scope:

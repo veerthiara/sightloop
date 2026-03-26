@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'SightLoop Developer Notes',
   tagline: 'Vision service architecture, roadmap, and implementation notes',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/sightloop-mark.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -69,6 +69,10 @@ const config: Config = {
     },
     navbar: {
       title: 'SightLoop',
+      logo: {
+        alt: 'SightLoop logo',
+        src: 'img/sightloop-mark.svg',
+      },
       items: [
         {
           type: 'docSidebar',
@@ -105,7 +109,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} SightLoop. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} SightLoop.`,
     },
     prism: {
       theme: prismThemes.github,

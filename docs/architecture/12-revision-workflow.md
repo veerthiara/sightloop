@@ -80,18 +80,6 @@ What counts as success for this revision?
 - reduce duplicate pickup events
 - add event cooldown logic
 
-## Why this helps with Copilot and ChatGPT
-
-A structured revision note gives better prompts.
-
-Instead of asking:
-- “help me build habit tracker”
-
-you can ask:
-- “Help me revise Phase 2. Current problem: bottle track breaks when hand occludes it for 1 second.”
-
-That produces much better technical discussion.
-
 ## My recommendation for you
 
 Use this same pattern you are already using in your other project:
