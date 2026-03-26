@@ -1,0 +1,74 @@
+:root {
+  --ifm-color-primary: #147a8a;
+  --ifm-color-primary-dark: #126e7c;
+  --ifm-color-primary-darker: #116876;
+  --ifm-color-primary-darkest: #0e5661;
+  --ifm-color-primary-light: #168698;
+  --ifm-color-primary-lighter: #178c9f;
+  --ifm-color-primary-lightest: #1aa7be;
+  --ifm-background-color: #f5f7fb;
+  --ifm-navbar-background-color: rgba(245, 247, 251, 0.88);
+  --ifm-footer-background-color: #0f172a;
+  --ifm-heading-color: #0f172a;
+  --ifm-font-family-base: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --ifm-font-family-monospace: "IBM Plex Mono", "SFMono-Regular", monospace;
+  --ifm-code-font-size: 95%;
+  --ifm-global-shadow-lw: 0 20px 45px rgba(15, 23, 42, 0.08);
+  --docusaurus-highlighted-code-line-bg: rgba(20, 122, 138, 0.12);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #4dc0cf;
+  --ifm-color-primary-dark: #33b6c7;
+  --ifm-color-primary-darker: #27afc1;
+  --ifm-color-primary-darkest: #208f9d;
+  --ifm-color-primary-light: #67cad7;
+  --ifm-color-primary-lighter: #74cfdb;
+  --ifm-color-primary-lightest: #9cdde5;
+  --ifm-background-color: #0b1220;
+  --ifm-navbar-background-color: rgba(11, 18, 32, 0.86);
+  --ifm-heading-color: #f8fafc;
+  --ifm-footer-background-color: #020617;
+  --docusaurus-highlighted-code-line-bg: rgba(77, 192, 207, 0.18);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at top left, rgba(77, 192, 207, 0.12), transparent 32%),
+    radial-gradient(circle at top right, rgba(20, 122, 138, 0.08), transparent 28%);
+}
+
+.navbar {
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.theme-doc-sidebar-container {
+  border-right: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible {
+  border-radius: 16px;
+}
+
+.menu__link,
+.menu__caret:before {
+  transition: all 180ms ease;
+}
+
+.menu__link--active {
+  font-weight: 700;
+}
+
+.pagination-nav {
+  gap: 1rem;
+}
+
+.pagination-nav__link {
+  border-radius: 18px;
+  box-shadow: var(--ifm-global-shadow-lw);
+}

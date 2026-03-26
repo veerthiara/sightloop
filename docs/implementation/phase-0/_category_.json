@@ -1,0 +1,9 @@
+{
+  "label": "Phase 0",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "title": "Phase 0",
+    "description": "Foundation implementation notes for the initial project setup."
+  }
+}

@@ -1,0 +1,17 @@
+name: habit-enforcer-local
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["storage"]
+    environment:
+      POSTGRES_DB: habit_enforcer
+      POSTGRES_USER: habit_enforcer
+      POSTGRES_PASSWORD: habit_enforcer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
