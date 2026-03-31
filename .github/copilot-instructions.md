@@ -11,6 +11,21 @@ Use these repository conventions when generating code or documentation.
 - `backend/` contains the vision service code
 - `infra/local/` contains local infrastructure such as Docker Compose
 
+## Project workflow
+This repository is built phase by phase and revision by revision.
+
+Branch naming convention:
+- `phase-01-bootstrap-rev-01`
+- `phase-02-core-db-table-implementation-rev-01`
+- `phase-02-core-db-table-implementation-rev-02`
+
+Documentation naming convention:
+- `docs/implementation/phase-01-rev01.md`
+- `docs/implementation/phase-02-rev01.md`
+- `docs/implementation/phase-02-rev02.md`
+
+Ensure documentation is always updated for each phase/revision with the same title and content structure as the example in `docs/implementation/phase-04-rev01.md`.
+
 ## Documentation conventions
 
 - use lowercase kebab-case file names
@@ -39,3 +54,18 @@ Every implementation note should include:
 - avoid tightly coupling hardware code to business logic
 - make future detection, tracking, and event layers easy to extend
 - treat frontend and RAG systems as external integration targets unless explicitly added to this repository later
+
+## Documentation rules
+Implementation docs should stay concise and avoid bloated explanations.
+
+Use this structure:
+
+- Title
+- Goal
+- Key Decisions for this implementation, including any chat instructions and the reason i asked for changes.
+- Architectural context (how this fits into the overall project direction and architecture)
+- Flow Chart or Sequence Diagram (User interaction scenario or data flow)
+- Scope implemented
+- Files changed
+- Notes
+- Next step

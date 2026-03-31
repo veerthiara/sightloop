@@ -117,66 +117,69 @@ Use a package layout similar to this:
 
 ```text
 habit-enforcer-plan/
-├── pyproject.toml
-├── README.md
-├── .gitignore
-├── .python-version
-├── configs/
-│   ├── dev.yaml
-│   ├── jetson.yaml
-│   └── test.yaml
-├── scripts/
-│   ├── run_camera.py
-│   ├── benchmark_camera.py
-│   └── capture_debug_session.py
-├── src/
-│   └── habit_enforcer/
-│       ├── __init__.py
-│       ├── app/
-│       │   └── runner.py
-│       ├── config/
-│       │   ├── models.py
-│       │   └── loader.py
-│       ├── camera/
-│       │   ├── base.py
-│       │   ├── opencv_camera.py
-│       │   └── frame.py
-│       ├── pipeline/
-│       │   └── camera_pipeline.py
-│       ├── metrics/
-│       │   ├── fps.py
-│       │   └── session_stats.py
-│       ├── logging/
-│       │   └── setup.py
-│       ├── debug/
-│       │   ├── frame_writer.py
-│       │   └── clip_writer.py
-│       └── utils/
-│           └── time.py
-├── tests/
-│   ├── unit/
-│   │   ├── test_config_loader.py
-│   │   ├── test_fps_tracker.py
-│   │   ├── test_session_stats.py
-│   │   └── test_frame_writer.py
-│   ├── integration/
-│   │   └── test_camera_pipeline_fake_source.py
-│   └── fixtures/
-└── artifacts/
-    ├── frames/
-    ├── clips/
-    └── logs/
+├── backend/
+│   ├── pyproject.toml
+│   ├── README.md
+│   ├── .python-version
+│   ├── configs/
+│   │   ├── dev.yaml
+│   │   ├── jetson.yaml
+│   │   └── test.yaml
+│   ├── scripts/
+│   │   ├── run_camera.py
+│   │   ├── benchmark_camera.py
+│   │   └── capture_debug_session.py
+│   ├── src/
+│   │   └── sightloop_vision/
+│   │       ├── __init__.py
+│   │       ├── app/
+│   │       │   └── runner.py
+│   │       ├── core/
+│   │       │   └── config.py
+│   │       ├── models/
+│   │       │   └── frame.py
+│   │       ├── camera/
+│   │       │   ├── base.py
+│   │       │   └── opencv_camera.py
+│   │       ├── pipeline/
+│   │       │   └── camera_pipeline.py
+│   │       ├── metrics/
+│   │       │   ├── fps.py
+│   │       │   └── session_stats.py
+│   │       ├── logging/
+│   │       │   └── setup.py
+│   │       ├── debug/
+│   │       │   ├── frame_writer.py
+│   │       │   └── clip_writer.py
+│   │       └── utils/
+│   │           └── time.py
+│   ├── tests/
+│   │   ├── unit/
+│   │   │   ├── test_config.py
+│   │   │   ├── test_fps_tracker.py
+│   │   │   ├── test_session_stats.py
+│   │   │   └── test_frame_writer.py
+│   │   ├── integration/
+│   │   │   └── test_camera_pipeline_fake_source.py
+│   │   └── fixtures/
+│   └── artifacts/
+│       ├── frames/
+│       ├── clips/
+│       └── logs/
+├── docs/
+├── infra/
+└── site/
 ```
 
 ## Separation of concerns
 
 Keep responsibilities narrow from the start.
 
-### `config`
+### `core`
 
 Responsible for:
 
-- loading environment-specific settings
+- loading environment-specific settings (YAML, env vars)
 - validating required fields
 - exposing typed config objects
 
@@ -185,6 +188,18 @@ Should not:
 - open cameras
 - compute FPS
 - write files
+
+### `models`
+
+Responsible for:
+
+- domain data structures (Frame, detection results, events)
+- keeping domain models separate from config models
+
+Should not:
+
+- contain config loading logic
+- depend on hardware or camera code
 
 ### `camera`
 

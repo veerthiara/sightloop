@@ -1,0 +1,19 @@
+session_name: jetson-session
+environment: jetson
+
+camera:
+  source: 0
+  width: 1920
+  height: 1080
+  fps: 30
+
+output:
+  frames_dir: artifacts/frames
+  clips_dir: artifacts/clips
+  logs_dir: artifacts/logs
+
+debug:
+  save_frame_interval_secs: 10.0
+  # No display on headless Jetson
+  display_enabled: false
+  metrics_log_interval_secs: 30.0

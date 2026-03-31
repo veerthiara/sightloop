@@ -1,0 +1,18 @@
+session_name: fixture-session
+environment: test
+
+camera:
+  source: 0
+  width: 640
+  height: 480
+  fps: 15
+
+output:
+  frames_dir: /tmp/sightloop-test/frames
+  clips_dir: /tmp/sightloop-test/clips
+  logs_dir: /tmp/sightloop-test/logs
+
+debug:
+  save_frame_interval_secs: 1.0
+  display_enabled: false
+  metrics_log_interval_secs: 5.0
