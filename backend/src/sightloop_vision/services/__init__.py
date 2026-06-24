@@ -6,3 +6,7 @@ Planned modules:
   debug/     — frame and clip writers (rev-05)
   logging/   — structured log setup (rev-05)
 """
+
+from sightloop_vision.services.pipeline import CameraPipeline
+
+__all__ = ["CameraPipeline"]
