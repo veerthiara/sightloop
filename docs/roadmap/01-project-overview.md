@@ -1,4 +1,4 @@
-# Phase Overview — Habit Enforcer Project
+# Phase Overview — SightLoop Vision Project
 
 ## Project idea
 

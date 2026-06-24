@@ -5,7 +5,7 @@ This is a suggested starting structure for your project.
 You do not need to implement all of it on day one.
 
 ```text
-habit-enforcer/
+sightloop_vision/
 ├── README.md
 ├── docs/
 │   ├── 01-project-overview.md
@@ -86,7 +86,7 @@ You do not need to create all folders immediately.
 You can start smaller, for example:
 
 ```text
-habit-enforcer/
+sightloop_vision/
 ├── app/
 │   ├── main.py
 │   ├── frame_reader.py

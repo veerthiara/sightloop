@@ -1,4 +1,4 @@
-# Habit Enforcer
+# SightLoop Vision
 
 This repository is structured to support both planning and execution for a camera-based vision service that begins on Jetson with a narrow bottle-pickup workflow and later integrates into a separate application stack.
 

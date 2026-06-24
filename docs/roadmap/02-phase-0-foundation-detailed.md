@@ -116,7 +116,7 @@ By the end of this phase, you should have:
 Use a package layout similar to this:
 
 ```text
-habit-enforcer-plan/
+sightloop_vision/
 ├── backend/
 │   ├── pyproject.toml
 │   ├── README.md
