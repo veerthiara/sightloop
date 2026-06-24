@@ -28,6 +28,19 @@ As work begins, create implementation notes under `docs/implementation/` so each
 - document each implementation revision explicitly
 - keep this repository focused on the vision service and documentation, not duplicated frontend or RAG code
 
+## Local git hooks
+
+To enable local branch and commit validation plus backend lint/test checks:
+
+- `make setup-git-hooks`
+- `make new-branch PHASE=00 REV=03 SLUG=camera-pipeline`
+
+The hooks enforce:
+
+- phase branch names like `phase-00-rev-02-foundation`
+- phase commit subjects like `phase-0 rev-02: frame model and camera abstraction`
+- `ruff` and `pytest` on staged backend changes
+
 ## Primary roadmap docs
 
 - `docs/roadmap/01-project-overview.md`

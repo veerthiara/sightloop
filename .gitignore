@@ -7,6 +7,7 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.uv-cache/
 
 # Environment and local config
 .env
@@ -26,6 +27,7 @@ build/
 # Project artifacts
 artifacts/
 data/
+Homework.md
 
 # Docker
 *.log

@@ -1,10 +1,10 @@
-# Phase 0 Revision 3 — Typed Config and Python Project Bootstrap
+# Phase 0 Revision 0+1 — Project Bootstrap and Typed Config
 
 ## Goal
 
 Initialize the `sightloop-vision` Python package inside `backend/` using `uv`,
 and deliver a working, validated configuration system that the rest of the service
-can build on. This is the first Python implementation revision for Phase 0.
+can build on. Covers Roadmap Revision 0 (project bootstrap) and Revision 1 (typed config).
 
 ## Key Decisions
 

@@ -1,4 +1,6 @@
-"""Domain models package — Frame, detection results, events, etc.
+"""Domain models package — Frame, detection results, events, etc."""
 
-Domain models live here. Configuration models stay in ``core.config``.
-"""
+from sightloop_vision.models.frame import Frame
+
+__all__ = ["Frame"]
+

@@ -15,22 +15,23 @@ Use these repository conventions when generating code or documentation.
 This repository is built phase by phase and revision by revision.
 
 Branch naming convention:
-- `phase-01-bootstrap-rev-01`
-- `phase-02-core-db-table-implementation-rev-01`
-- `phase-02-core-db-table-implementation-rev-02`
+- `phase-00-rev-02-foundation`
+- `phase-01-rev-01-detection`
+- `phase-02-rev-01-tracking-and-zones`
 
 Documentation naming convention:
-- `docs/implementation/phase-01-rev01.md`
-- `docs/implementation/phase-02-rev01.md`
-- `docs/implementation/phase-02-rev02.md`
+- `docs/implementation/phase-0/rev-00-01-project-bootstrap-and-config.md`
+- `docs/implementation/phase-0/rev-02-frame-model-and-camera-abstraction.md`
+- `docs/implementation/phase-1/rev-01-detection-baseline.md`
 
-Ensure documentation is always updated for each phase/revision with the same title and content structure as the example in `docs/implementation/phase-04-rev01.md`.
+Ensure documentation is always updated for each phase/revision with the same structure as the repo implementation template and the latest revision notes under `docs/implementation/`.
 
 ## Documentation conventions
 
 - use lowercase kebab-case file names
 - create implementation notes under phase folders
 - use revision-prefixed names such as `rev-01-project-bootstrap.md`
+- keep historical non-roadmap notes clearly labeled, such as `codex-01-*`
 - keep roadmap docs high-level
 - keep implementation docs concrete and execution-oriented
 

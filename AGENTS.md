@@ -64,6 +64,13 @@ Use short, concrete bullets. Keep the note focused on one revision.
 - if moving files, update indexes and references in the same change
 - preserve historical revision documents unless the user explicitly asks to delete or merge them
 
+## Git workflow conventions
+
+- use one phase/revision branch per implementation slice when practical
+- prefer branch names like `phase-00-rev-02-foundation`
+- on phase branches, prefer commit subjects like `phase-0 rev-02: short summary`
+- if local hooks are installed, keep them enabled so branch and commit drift is caught before history gets messy
+
 ## If uncertain
 
 Prefer adding a small, explicit documentation file that explains the convention rather than assuming the convention will be remembered later.

@@ -28,16 +28,22 @@ This is much better than writing a perfect plan once.
 
 ## Suggested phase revision naming
 
-You can structure your notes like this:
+Use branch names like:
 
-- Phase-0-Revision-1
-- Phase-0-Revision-2
-- Phase-1-Revision-1
-- Phase-1-Revision-2
+- `phase-00-rev-02-foundation`
+- `phase-01-rev-01-detection`
+- `phase-02-rev-01-tracking-and-zones`
 
-Or use folders:
-- `docs/revisions/phase-1/rev-01.md`
-- `docs/revisions/phase-1/rev-02.md`
+Use implementation note paths like:
+
+- `docs/implementation/phase-0/rev-00-01-project-bootstrap-and-config.md`
+- `docs/implementation/phase-0/rev-02-frame-model-and-camera-abstraction.md`
+- `docs/implementation/phase-1/rev-01-detection-baseline.md`
+
+Keep pre-roadmap historical notes clearly labeled instead of pretending they are roadmap-aligned revisions:
+
+- `docs/implementation/phase-0/codex-01-project-bootstrap.md`
+- `docs/implementation/phase-0/codex-02-docs-site-setup.md`
 
 ## What each revision note should contain
 
@@ -90,6 +96,16 @@ Use this same pattern you are already using in your other project:
 - revise
 
 That will work very well here too.
+
+## Local enforcement
+
+This repo can enforce the workflow locally with git hooks.
+
+If installed via `make setup-git-hooks`, the hooks will:
+
+- reject invalid phase branch names
+- require phase commit messages to match the branch revision
+- run backend lint and tests before commit when staged files touch `backend/`
 
 ## Definition of success for the planning style
 
