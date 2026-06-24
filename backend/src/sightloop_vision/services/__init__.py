@@ -7,6 +7,7 @@ Planned modules:
   logging/   — structured log setup (rev-05)
 """
 
+from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 from sightloop_vision.services.pipeline import CameraPipeline
 
-__all__ = ["CameraPipeline"]
+__all__ = ["CameraPipeline", "CameraSessionStats", "FpsTracker"]

@@ -7,6 +7,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from sightloop_vision.core.config import AppConfig, load_config
+from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 from sightloop_vision.services.pipeline import CameraPipeline
 
 
@@ -36,9 +37,14 @@ def run_from_config(config_path: Path | str) -> int:
     """Load config, build the pipeline, and run it to completion."""
     config = load_config(config_path)
     camera_source = build_camera_source(config)
+    fps_tracker = FpsTracker()
+    session_stats = CameraSessionStats(session_name=config.session_name)
     pipeline = CameraPipeline(
         source=camera_source,
         display_enabled=config.debug.display_enabled,
+        fps_tracker=fps_tracker,
+        session_stats=session_stats,
+        metrics_log_interval_secs=config.debug.metrics_log_interval_secs,
     )
 
     print(
@@ -47,6 +53,8 @@ def run_from_config(config_path: Path | str) -> int:
     )
     processed_frames = pipeline.run()
     print(f"Stopped session '{config.session_name}' after {processed_frames} frames.")
+    if pipeline.final_summary is not None:
+        print(f"Session metrics: {pipeline.final_summary}")
     return processed_frames
 
 
