@@ -61,3 +61,28 @@ Typical commands:
 
 - `cd site && npm start`
 - `cd site && npm run build`
+
+## RTSP Validation
+
+Use the Jetson config as the main RTSP validation path.
+
+Example:
+
+```bash
+cd backend
+export TAPO_RTSP_URL='rtsp://username:password@camera-ip:554/stream1'
+uv run python scripts/validate_camera_setup.py --config configs/jetson.yaml --max-frames 300
+```
+
+After a run, inspect:
+
+- `backend/artifacts/frames/`
+
+If you want a custom session label:
+
+```bash
+uv run python scripts/validate_camera_setup.py \
+  --config configs/jetson.yaml \
+  --max-frames 300 \
+  --session-name tapo-validation-01
+```

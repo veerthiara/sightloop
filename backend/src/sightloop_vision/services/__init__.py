@@ -10,6 +10,11 @@ Planned modules:
 from sightloop_vision.services.debug import ClipWriter, FrameWriter
 from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 from sightloop_vision.services.pipeline import CameraPipeline
+from sightloop_vision.services.validation import (
+    CameraValidationReport,
+    build_validation_report,
+    mask_camera_source,
+)
 
 __all__ = [
     "CameraPipeline",
@@ -17,4 +22,7 @@ __all__ = [
     "ClipWriter",
     "FpsTracker",
     "FrameWriter",
+    "CameraValidationReport",
+    "build_validation_report",
+    "mask_camera_source",
 ]

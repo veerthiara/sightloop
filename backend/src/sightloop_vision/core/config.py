@@ -11,6 +11,8 @@ Usage::
     config = load_config("configs/dev.yaml")
 """
 
+import os
+import re
 from pathlib import Path
 
 import yaml
@@ -61,6 +63,32 @@ class ConfigLoadError(Exception):
     """Raised when the config file cannot be read or fails validation."""
 
 
+_ENV_VAR_PATTERN = re.compile(r"\$\{([A-Z0-9_]+)\}")
+
+
+def _expand_env_vars(value: object) -> object:
+    """Recursively expand ${VAR_NAME} placeholders inside config values."""
+    if isinstance(value, dict):
+        return {k: _expand_env_vars(v) for k, v in value.items()}
+
+    if isinstance(value, list):
+        return [_expand_env_vars(item) for item in value]
+
+    if not isinstance(value, str):
+        return value
+
+    def replace(match: re.Match[str]) -> str:
+        env_name = match.group(1)
+        env_value = os.getenv(env_name)
+        if env_value is None:
+            raise ConfigLoadError(
+                f"Environment variable {env_name!r} is required but not set."
+            )
+        return env_value
+
+    return _ENV_VAR_PATTERN.sub(replace, value)
+
+
 def load_config(path: Path | str) -> AppConfig:
     """Load and validate an AppConfig from a YAML file.
 
@@ -89,6 +117,8 @@ def load_config(path: Path | str) -> AppConfig:
             f"Expected a YAML mapping at the top level of {config_path}, "
             f"got {type(raw).__name__}"
         )
+
+    raw = _expand_env_vars(raw)
 
     try:
         return AppConfig.model_validate(raw)

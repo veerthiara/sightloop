@@ -2,7 +2,7 @@ session_name: jetson-session
 environment: jetson
 
 camera:
-  source: 0
+  source: "${TAPO_RTSP_URL}"
   width: 1920
   height: 1080
   fps: 30

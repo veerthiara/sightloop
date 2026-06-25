@@ -158,3 +158,34 @@ class TestLoadConfig:
     def test_accepts_path_string(self) -> None:
         cfg = load_config(str(VALID_CONFIG))
         assert isinstance(cfg, AppConfig)
+
+    def test_expands_env_var_placeholders(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        monkeypatch.setenv("TEST_RTSP_URL", "rtsp://user:pass@10.0.0.1:554/stream1")
+        config_file = tmp_path / "env.yaml"
+        config_file.write_text(
+            "session_name: env-test\n"
+            "camera:\n"
+            "  source: \"${TEST_RTSP_URL}\"\n"
+        )
+
+        cfg = load_config(config_file)
+
+        assert cfg.camera.source == "rtsp://user:pass@10.0.0.1:554/stream1"
+
+    def test_missing_env_var_placeholder_raises_config_load_error(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        config_file = tmp_path / "missing_env.yaml"
+        config_file.write_text(
+            "session_name: env-test\n"
+            "camera:\n"
+            "  source: \"${MISSING_RTSP_URL}\"\n"
+        )
+
+        with pytest.raises(ConfigLoadError, match="required but not set"):
+            load_config(config_file)
