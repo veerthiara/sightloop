@@ -36,6 +36,8 @@ class TestDetectionQualityReport:
         assert summary["annotated_frames_saved"] == 2
         assert summary["detections_by_class"] == {"person": 2, "bottle": 2}
         assert summary["average_confidence_by_class"] == {"person": 0.7, "bottle": 0.7}
+        assert summary["min_confidence_by_class"] == {"person": 0.6, "bottle": 0.5}
+        assert summary["max_confidence_by_class"] == {"person": 0.8, "bottle": 0.9}
 
     def test_handles_empty_report(self) -> None:
         report = DetectionQualityReport()
@@ -44,5 +46,7 @@ class TestDetectionQualityReport:
             "detection_frames_processed": 0,
             "detections_by_class": {},
             "average_confidence_by_class": {},
+            "min_confidence_by_class": {},
+            "max_confidence_by_class": {},
             "annotated_frames_saved": 0,
         }

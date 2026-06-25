@@ -104,3 +104,30 @@ For tuning and model comparison:
 uv run python scripts/benchmark_detection.py --config configs/jetson.yaml --max-frames 300
 uv run python scripts/benchmark_detection.py --config configs/jetson.yaml --max-frames 300 --model-name yolov8s.pt
 ```
+
+Write automated baseline reports:
+
+```bash
+uv run python scripts/benchmark_detection.py \
+  --config configs/jetson.yaml \
+  --max-frames 300 \
+  --write-baseline
+```
+
+Or attach notes while writing the baseline:
+
+```bash
+uv run python scripts/benchmark_detection.py \
+  --config configs/jetson.yaml \
+  --max-frames 300 \
+  --model-name yolov8s.pt \
+  --write-baseline \
+  --baseline-notes "Evening light test, review bottle boxes carefully."
+```
+
+Inspect generated outputs:
+
+- `backend/artifacts/baselines/{session_name}/detection-baseline.json`
+- `backend/artifacts/baselines/{session_name}/detection-baseline.md`
+
+The automated quality gate is only a first-pass signal. Visual review is still required to confirm the boxes are actually correct.

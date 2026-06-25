@@ -38,6 +38,40 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Optional confidence threshold override.",
     )
+    parser.add_argument(
+        "--write-baseline",
+        action="store_true",
+        help="Write automated JSON and Markdown baseline reports.",
+    )
+    parser.add_argument(
+        "--baseline-notes",
+        default=None,
+        help="Optional notes to attach to the baseline report.",
+    )
+    parser.add_argument(
+        "--min-person-detections",
+        type=int,
+        default=1,
+        help="Quality gate minimum for person detections.",
+    )
+    parser.add_argument(
+        "--min-bottle-detections",
+        type=int,
+        default=1,
+        help="Quality gate minimum for bottle detections.",
+    )
+    parser.add_argument(
+        "--min-person-confidence",
+        type=float,
+        default=0.50,
+        help="Quality gate minimum average confidence for person detections.",
+    )
+    parser.add_argument(
+        "--min-bottle-confidence",
+        type=float,
+        default=0.25,
+        help="Quality gate minimum average confidence for bottle detections.",
+    )
     return parser.parse_args(argv)
 
 
@@ -82,8 +116,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     from sightloop_vision.app.runner import build_camera_source, build_frame_writer
     from sightloop_vision.core.config import load_config
     from sightloop_vision.services.detection import (
+        DetectionBaselineWriter,
         DetectionQualityReport,
         YoloDetector,
+        build_detection_baseline_report,
         is_supported_model,
     )
     from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
@@ -155,6 +191,28 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     print("Detection quality summary:")
     print(summary)
+
+    if args.write_baseline:
+        baseline_report = build_detection_baseline_report(
+            session_name=config.session_name,
+            model_name=model_name,
+            confidence_threshold=confidence_threshold,
+            run_every_n_frames=config.detection.run_every_n_frames,
+            classes=config.detection.classes,
+            camera_source=config.camera.source,
+            output_dir=renderer.session_dir,
+            quality_summary=summary,
+            notes=args.baseline_notes,
+            min_person_detections=args.min_person_detections,
+            min_bottle_detections=args.min_bottle_detections,
+            min_person_confidence=args.min_person_confidence,
+            min_bottle_confidence=args.min_bottle_confidence,
+        )
+        writer = DetectionBaselineWriter()
+        json_path, markdown_path = writer.write_all(baseline_report)
+        print("Baseline reports written:")
+        print({"json": str(json_path), "markdown": str(markdown_path)})
+
     return 0
 
 
