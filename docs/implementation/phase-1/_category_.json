@@ -1,0 +1,9 @@
+{
+  "label": "Phase 1",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "title": "Phase 1",
+    "description": "Detection-baseline implementation notes."
+  }
+}

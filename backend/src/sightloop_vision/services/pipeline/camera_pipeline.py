@@ -29,6 +29,7 @@ class CameraPipeline:
         fps_tracker: FpsTracker | None = None,
         session_stats: CameraSessionStats | None = None,
         frame_writer: FrameWriter | None = None,
+        frame_processor: Callable[[object], None] | None = None,
         metrics_log_interval_secs: float | None = None,
         metrics_log_interval_frames: int | None = None,
         metrics_logger: Callable[[str], None] | None = None,
@@ -38,6 +39,7 @@ class CameraPipeline:
         self._fps_tracker = fps_tracker
         self._session_stats = session_stats
         self._frame_writer = frame_writer
+        self._frame_processor = frame_processor
         self._metrics_log_interval_secs = metrics_log_interval_secs
         self._metrics_log_interval_frames = metrics_log_interval_frames
         self._metrics_logger = metrics_logger or print
@@ -76,6 +78,8 @@ class CameraPipeline:
                     self._session_stats.record_frame(frame)
                 if self._frame_writer is not None:
                     self._frame_writer.write_frame(frame)
+                if self._frame_processor is not None:
+                    self._frame_processor(frame)
                 if self._should_log_metrics(frame_ts, last_metrics_log_at):
                     last_metrics_log_at = frame_ts
                     self._log_metrics(prefix="metrics")

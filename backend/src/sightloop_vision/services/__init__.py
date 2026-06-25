@@ -8,8 +8,15 @@ Planned modules:
 """
 
 from sightloop_vision.services.debug import ClipWriter, FrameWriter
+from sightloop_vision.services.detection import (
+    Detector,
+    YoloDetector,
+    filter_detections_by_allowed_classes,
+    filter_detections_by_confidence,
+)
 from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 from sightloop_vision.services.pipeline import CameraPipeline
+from sightloop_vision.services.rendering import DetectionRenderer
 from sightloop_vision.services.validation import (
     CameraValidationReport,
     build_validation_report,
@@ -25,4 +32,9 @@ __all__ = [
     "CameraValidationReport",
     "build_validation_report",
     "mask_camera_source",
+    "DetectionRenderer",
+    "Detector",
+    "YoloDetector",
+    "filter_detections_by_allowed_classes",
+    "filter_detections_by_confidence",
 ]

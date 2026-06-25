@@ -9,6 +9,7 @@ from sightloop_vision.core import (
     CameraConfig,
     ConfigLoadError,
     DebugConfig,
+    DetectionConfig,
     OutputConfig,
     load_config,
 )
@@ -78,6 +79,7 @@ class TestAppConfig:
         assert isinstance(cfg.camera, CameraConfig)
         assert isinstance(cfg.output, OutputConfig)
         assert isinstance(cfg.debug, DebugConfig)
+        assert isinstance(cfg.detection, DetectionConfig)
 
     def test_missing_session_name_raises(self) -> None:
         with pytest.raises(Exception):
@@ -158,6 +160,12 @@ class TestLoadConfig:
     def test_accepts_path_string(self) -> None:
         cfg = load_config(str(VALID_CONFIG))
         assert isinstance(cfg, AppConfig)
+
+    def test_detection_defaults_load_when_missing_from_yaml(self) -> None:
+        cfg = load_config(VALID_CONFIG)
+        assert cfg.detection.enabled is False
+        assert cfg.detection.model_name == "yolov8n.pt"
+        assert cfg.detection.classes == ["person", "bottle"]
 
     def test_expands_env_var_placeholders(
         self,

@@ -86,3 +86,14 @@ uv run python scripts/validate_camera_setup.py \
   --max-frames 300 \
   --session-name tapo-validation-01
 ```
+
+## RTSP Detection
+
+Install detection dependencies, export the RTSP URL, and run the baseline detector:
+
+```bash
+cd backend
+uv sync --extra dev --extra camera --extra detection
+export TAPO_RTSP_URL='rtsp://USER:PASSWORD@CAMERA_IP:554/stream1'
+uv run python scripts/run_detection.py --config configs/jetson.yaml --max-frames 300
+```

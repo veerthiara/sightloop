@@ -19,3 +19,13 @@ debug:
   # No display on headless Jetson
   display_enabled: false
   metrics_log_interval_secs: 30.0
+
+detection:
+  enabled: true
+  model_name: yolov8n.pt
+  confidence_threshold: 0.35
+  classes:
+    - person
+    - bottle
+  run_every_n_frames: 30
+  output_dir: artifacts/detections
