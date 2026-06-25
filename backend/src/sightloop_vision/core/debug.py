@@ -1,15 +1,25 @@
 """Debug and observability settings."""
 
+from pathlib import Path
+
 from pydantic import BaseModel, Field
 
 
 class DebugConfig(BaseModel):
     """Debug and observability settings."""
 
-    save_frame_interval_secs: float = Field(
-        default=5.0,
-        ge=0.1,
-        description="Save one debug frame every N seconds. 0 disables saving.",
+    enabled: bool = Field(
+        default=False,
+        description="Enable debug evidence capture such as saved frames.",
+    )
+    output_dir: Path | None = Field(
+        default=None,
+        description="Optional override directory for saved debug frames.",
+    )
+    save_every_n_frames: int = Field(
+        default=30,
+        ge=1,
+        description="Save one debug frame every N processed frames.",
     )
     display_enabled: bool = Field(
         default=False,

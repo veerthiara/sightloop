@@ -7,6 +7,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from sightloop_vision.core.config import AppConfig, load_config
+from sightloop_vision.services.debug import FrameWriter
 from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 from sightloop_vision.services.pipeline import CameraPipeline
 
@@ -39,11 +40,13 @@ def run_from_config(config_path: Path | str) -> int:
     camera_source = build_camera_source(config)
     fps_tracker = FpsTracker()
     session_stats = CameraSessionStats(session_name=config.session_name)
+    frame_writer = build_frame_writer(config)
     pipeline = CameraPipeline(
         source=camera_source,
         display_enabled=config.debug.display_enabled,
         fps_tracker=fps_tracker,
         session_stats=session_stats,
+        frame_writer=frame_writer,
         metrics_log_interval_secs=config.debug.metrics_log_interval_secs,
     )
 
@@ -56,6 +59,20 @@ def run_from_config(config_path: Path | str) -> int:
     if pipeline.final_summary is not None:
         print(f"Session metrics: {pipeline.final_summary}")
     return processed_frames
+
+
+def build_frame_writer(config: AppConfig) -> FrameWriter | None:
+    """Create an optional debug frame writer from app config."""
+    if not config.debug.enabled:
+        return None
+
+    output_dir = config.debug.output_dir or config.output.frames_dir
+    return FrameWriter(
+        output_dir=output_dir,
+        session_name=config.session_name,
+        save_every_n_frames=config.debug.save_every_n_frames,
+        enabled=config.debug.enabled,
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover

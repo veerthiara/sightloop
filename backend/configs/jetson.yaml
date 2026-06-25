@@ -13,7 +13,9 @@ output:
   logs_dir: artifacts/logs
 
 debug:
-  save_frame_interval_secs: 10.0
+  enabled: true
+  output_dir: artifacts/frames
+  save_every_n_frames: 60
   # No display on headless Jetson
   display_enabled: false
   metrics_log_interval_secs: 30.0

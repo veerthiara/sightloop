@@ -13,6 +13,8 @@ output:
   logs_dir: artifacts/logs
 
 debug:
-  save_frame_interval_secs: 5.0
+  enabled: true
+  output_dir: artifacts/frames
+  save_every_n_frames: 30
   display_enabled: true
   metrics_log_interval_secs: 10.0

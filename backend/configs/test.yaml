@@ -13,6 +13,8 @@ output:
   logs_dir: /tmp/sightloop-test/logs
 
 debug:
-  save_frame_interval_secs: 1.0
+  enabled: true
+  output_dir: /tmp/sightloop-test/frames
+  save_every_n_frames: 2
   display_enabled: false
   metrics_log_interval_secs: 5.0

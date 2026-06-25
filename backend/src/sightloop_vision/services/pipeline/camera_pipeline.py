@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from sightloop_vision.adapters.camera import CameraSource
+from sightloop_vision.services.debug import FrameWriter
 from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 
 
@@ -27,6 +28,7 @@ class CameraPipeline:
         display_enabled: bool = False,
         fps_tracker: FpsTracker | None = None,
         session_stats: CameraSessionStats | None = None,
+        frame_writer: FrameWriter | None = None,
         metrics_log_interval_secs: float | None = None,
         metrics_log_interval_frames: int | None = None,
         metrics_logger: Callable[[str], None] | None = None,
@@ -35,6 +37,7 @@ class CameraPipeline:
         self._display_enabled = display_enabled
         self._fps_tracker = fps_tracker
         self._session_stats = session_stats
+        self._frame_writer = frame_writer
         self._metrics_log_interval_secs = metrics_log_interval_secs
         self._metrics_log_interval_frames = metrics_log_interval_frames
         self._metrics_logger = metrics_logger or print
@@ -71,6 +74,8 @@ class CameraPipeline:
                     frame_ts = self._fps_tracker.record_frame(frame.timestamp)
                 if self._session_stats is not None:
                     self._session_stats.record_frame(frame)
+                if self._frame_writer is not None:
+                    self._frame_writer.write_frame(frame)
                 if self._should_log_metrics(frame_ts, last_metrics_log_at):
                     last_metrics_log_at = frame_ts
                     self._log_metrics(prefix="metrics")
@@ -128,10 +133,16 @@ class CameraPipeline:
 
         if self._session_stats is not None:
             self._session_stats.finish(ended_at=ended_at)
-            return self._session_stats.to_summary_dict(self._fps_tracker)
+            summary = self._session_stats.to_summary_dict(self._fps_tracker)
+            if self._frame_writer is not None:
+                summary["saved_frames"] = self._frame_writer.saved_frame_count
+            return summary
 
         if self._fps_tracker is not None:
-            return self._fps_tracker.summary()
+            summary = self._fps_tracker.summary()
+            if self._frame_writer is not None:
+                summary["saved_frames"] = self._frame_writer.saved_frame_count
+            return summary
 
         return None
 

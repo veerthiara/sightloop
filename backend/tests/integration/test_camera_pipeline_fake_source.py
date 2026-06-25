@@ -1,7 +1,10 @@
 """Integration-style tests for the main camera pipeline using FakeCameraSource."""
 
+from pathlib import Path
+
 from sightloop_vision.adapters.camera.base import CameraOpenError
 from sightloop_vision.adapters.camera.fake import FakeCameraSource
+from sightloop_vision.services.debug import FrameWriter
 from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 from sightloop_vision.services.pipeline import CameraPipeline
 
@@ -136,3 +139,29 @@ class TestCameraPipeline:
 
         assert source.close_calls == 1
         assert source._is_open is False
+
+    def test_pipeline_saves_only_expected_debug_frames(self, tmp_path: Path) -> None:
+        source = TrackingFakeCameraSource(total_frames=5)
+        writer = FrameWriter(
+            output_dir=tmp_path,
+            session_name="debug-session",
+            save_every_n_frames=2,
+        )
+        session_stats = CameraSessionStats(session_name="debug-session")
+        pipeline = CameraPipeline(
+            source=source,
+            frame_writer=writer,
+            session_stats=session_stats,
+        )
+
+        processed = pipeline.run()
+
+        saved_files = sorted(writer.session_dir.glob("*.ppm"))
+        assert processed == 5
+        assert writer.saved_frame_count == 3
+        assert len(saved_files) == 3
+        assert saved_files[0].name.startswith("frame_000000_")
+        assert saved_files[1].name.startswith("frame_000002_")
+        assert saved_files[2].name.startswith("frame_000004_")
+        assert pipeline.final_summary is not None
+        assert pipeline.final_summary["saved_frames"] == 3

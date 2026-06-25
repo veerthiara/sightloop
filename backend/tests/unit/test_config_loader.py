@@ -59,13 +59,15 @@ class TestCameraConfig:
 class TestDebugConfig:
     def test_defaults_are_valid(self) -> None:
         d = DebugConfig()
-        assert d.save_frame_interval_secs == 5.0
+        assert d.enabled is False
+        assert d.output_dir is None
+        assert d.save_every_n_frames == 30
         assert d.display_enabled is False
         assert d.metrics_log_interval_secs == 10.0
 
     def test_save_interval_below_minimum_raises(self) -> None:
         with pytest.raises(Exception):
-            DebugConfig(save_frame_interval_secs=0.0)
+            DebugConfig(save_every_n_frames=0)
 
 
 class TestAppConfig:
@@ -112,6 +114,12 @@ class TestLoadConfig:
     def test_debug_display_disabled(self) -> None:
         cfg = load_config(VALID_CONFIG)
         assert cfg.debug.display_enabled is False
+
+    def test_debug_frame_writer_fields_loaded(self) -> None:
+        cfg = load_config(VALID_CONFIG)
+        assert cfg.debug.enabled is True
+        assert cfg.debug.save_every_n_frames == 2
+        assert cfg.debug.output_dir == Path("/tmp/sightloop-test/frames")
 
     def test_nonexistent_file_raises_config_load_error(self) -> None:
         with pytest.raises(ConfigLoadError, match="not found"):
