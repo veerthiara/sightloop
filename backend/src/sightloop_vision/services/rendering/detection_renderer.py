@@ -27,6 +27,22 @@ class DetectionRenderer:
     def session_dir(self) -> Path:
         return self._base_output_dir / self._session_slug
 
+    @property
+    def annotated_dir(self) -> Path:
+        return self.session_dir / "annotated"
+
+    @property
+    def person_dir(self) -> Path:
+        return self.session_dir / "person"
+
+    @property
+    def bottle_dir(self) -> Path:
+        return self.session_dir / "bottle"
+
+    @property
+    def no_target_dir(self) -> Path:
+        return self.session_dir / "no_target"
+
     def annotate_frame(self, frame: Frame, detections: list[Detection]) -> Image.Image:
         rgb = frame.image[:, :, ::-1].copy()
         image = Image.fromarray(rgb)
@@ -47,12 +63,33 @@ class DetectionRenderer:
 
     def build_output_path(self, frame: Frame) -> Path:
         ts = frame.timestamp.astimezone().strftime("%Y%m%dT%H%M%S_%f%z")
-        return self.session_dir / f"frame_{frame.frame_id:06d}_{ts}.png"
+        return self.annotated_dir / f"frame_{frame.frame_id:06d}_{ts}.png"
 
     def save_annotated_frame(self, frame: Frame, detections: list[Detection]) -> Path:
         image = self.annotate_frame(frame, detections)
         output_path = self.build_output_path(frame)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         image.save(output_path, format="PNG")
+        self._save_grouped_copy(image, output_path.name, detections)
         self.saved_frame_count += 1
         return output_path
+
+    def _save_grouped_copy(
+        self,
+        image: Image.Image,
+        file_name: str,
+        detections: list[Detection],
+    ) -> None:
+        class_names = {detection.class_name for detection in detections}
+
+        targets: list[Path] = []
+        if "person" in class_names:
+            targets.append(self.person_dir / file_name)
+        if "bottle" in class_names:
+            targets.append(self.bottle_dir / file_name)
+        if not targets:
+            targets.append(self.no_target_dir / file_name)
+
+        for target in targets:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            image.save(target, format="PNG")

@@ -97,3 +97,10 @@ uv sync --extra dev --extra camera --extra detection
 export TAPO_RTSP_URL='rtsp://USER:PASSWORD@CAMERA_IP:554/stream1'
 uv run python scripts/run_detection.py --config configs/jetson.yaml --max-frames 300
 ```
+
+For tuning and model comparison:
+
+```bash
+uv run python scripts/benchmark_detection.py --config configs/jetson.yaml --max-frames 300
+uv run python scripts/benchmark_detection.py --config configs/jetson.yaml --max-frames 300 --model-name yolov8s.pt
+```

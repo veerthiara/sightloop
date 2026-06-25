@@ -165,6 +165,7 @@ class TestLoadConfig:
         cfg = load_config(VALID_CONFIG)
         assert cfg.detection.enabled is False
         assert cfg.detection.model_name == "yolov8n.pt"
+        assert cfg.detection.candidate_models == ["yolov8n.pt", "yolov8s.pt"]
         assert cfg.detection.classes == ["person", "bottle"]
 
     def test_expands_env_var_placeholders(

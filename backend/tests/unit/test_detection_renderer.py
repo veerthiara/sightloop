@@ -42,3 +42,12 @@ class TestDetectionRenderer:
         assert output_path.exists()
         assert output_path.suffix == ".png"
         assert renderer.saved_frame_count == 1
+        assert output_path.parent == renderer.annotated_dir
+        assert (renderer.person_dir / output_path.name).exists()
+
+    def test_save_annotated_frame_without_targets_goes_to_no_target(self, tmp_path: Path) -> None:
+        renderer = DetectionRenderer(tmp_path, "session-a")
+        output_path = renderer.save_annotated_frame(self._make_frame(frame_id=4), [])
+
+        assert output_path.exists()
+        assert (renderer.no_target_dir / output_path.name).exists()

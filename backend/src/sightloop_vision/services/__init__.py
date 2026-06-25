@@ -9,10 +9,14 @@ Planned modules:
 
 from sightloop_vision.services.debug import ClipWriter, FrameWriter
 from sightloop_vision.services.detection import (
+    DEFAULT_CANDIDATE_MODELS,
+    DetectionQualityReport,
     Detector,
     YoloDetector,
     filter_detections_by_allowed_classes,
     filter_detections_by_confidence,
+    get_candidate_models,
+    is_supported_model,
 )
 from sightloop_vision.services.metrics import CameraSessionStats, FpsTracker
 from sightloop_vision.services.pipeline import CameraPipeline
@@ -33,8 +37,12 @@ __all__ = [
     "build_validation_report",
     "mask_camera_source",
     "DetectionRenderer",
+    "DetectionQualityReport",
     "Detector",
+    "DEFAULT_CANDIDATE_MODELS",
     "YoloDetector",
     "filter_detections_by_allowed_classes",
     "filter_detections_by_confidence",
+    "get_candidate_models",
+    "is_supported_model",
 ]

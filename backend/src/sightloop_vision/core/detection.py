@@ -16,6 +16,10 @@ class DetectionConfig(BaseModel):
         default="yolov8n.pt",
         description="Ultralytics model name or path.",
     )
+    candidate_models: list[str] = Field(
+        default_factory=lambda: ["yolov8n.pt", "yolov8s.pt"],
+        description="Allowed candidate model names for benchmarking.",
+    )
     confidence_threshold: float = Field(
         default=0.35,
         ge=0.0,
