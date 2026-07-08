@@ -18,6 +18,7 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel, Field, ValidationError, field_validator
 
+from sightloop_vision.core.calibration import CalibrationConfig
 from sightloop_vision.core.camera import CameraConfig
 from sightloop_vision.core.debug import DebugConfig
 from sightloop_vision.core.detection import DetectionConfig
@@ -46,6 +47,7 @@ class AppConfig(BaseModel):
     output: OutputConfig = Field(default_factory=OutputConfig)
     debug: DebugConfig = Field(default_factory=DebugConfig)
     detection: DetectionConfig = Field(default_factory=DetectionConfig)
+    calibration: CalibrationConfig = Field(default_factory=CalibrationConfig)
 
     @field_validator("environment")
     @classmethod

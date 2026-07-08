@@ -11,6 +11,7 @@ output:
   frames_dir: /tmp/sightloop-test/frames
   clips_dir: /tmp/sightloop-test/clips
   logs_dir: /tmp/sightloop-test/logs
+  image_extension: jpg
 
 debug:
   enabled: true
@@ -18,3 +19,8 @@ debug:
   save_every_n_frames: 2
   display_enabled: false
   metrics_log_interval_secs: 5.0
+  image_extension: jpg
+
+calibration:
+  output_dir: /tmp/sightloop-test/calibration
+  image_extension: jpg

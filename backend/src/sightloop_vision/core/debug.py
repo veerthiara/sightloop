@@ -30,3 +30,7 @@ class DebugConfig(BaseModel):
         ge=1.0,
         description="Emit a metrics summary log line every N seconds.",
     )
+    image_extension: str = Field(
+        default="jpg",
+        description="Image file extension for debug frames (jpg, png).",
+    )

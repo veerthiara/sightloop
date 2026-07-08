@@ -11,6 +11,7 @@ output:
   frames_dir: artifacts/frames
   clips_dir: artifacts/clips
   logs_dir: artifacts/logs
+  image_extension: jpg
 
 debug:
   enabled: true
@@ -18,3 +19,8 @@ debug:
   save_every_n_frames: 30
   display_enabled: true
   metrics_log_interval_secs: 10.0
+  image_extension: jpg
+
+calibration:
+  output_dir: artifacts/calibration
+  image_extension: jpg

@@ -156,7 +156,7 @@ class TestCameraPipeline:
 
         processed = pipeline.run()
 
-        saved_files = sorted(writer.session_dir.glob("*.ppm"))
+        saved_files = sorted(writer.session_dir.glob("*.jpg"))
         assert processed == 5
         assert writer.saved_frame_count == 3
         assert len(saved_files) == 3

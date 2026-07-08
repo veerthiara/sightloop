@@ -11,14 +11,15 @@ output:
   frames_dir: artifacts/frames
   clips_dir: artifacts/clips
   logs_dir: artifacts/logs
+  image_extension: jpg
 
 debug:
   enabled: true
   output_dir: artifacts/frames
   save_every_n_frames: 60
-  # No display on headless Jetson
   display_enabled: false
   metrics_log_interval_secs: 30.0
+  image_extension: jpg
 
 detection:
   enabled: true
@@ -32,3 +33,7 @@ detection:
     - bottle
   run_every_n_frames: 30
   output_dir: artifacts/detections
+
+calibration:
+  output_dir: artifacts/calibration
+  image_extension: jpg

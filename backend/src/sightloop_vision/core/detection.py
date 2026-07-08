@@ -39,3 +39,7 @@ class DetectionConfig(BaseModel):
         default=Path("artifacts/detections"),
         description="Directory for annotated detection frames.",
     )
+    image_extension: str = Field(
+        default="png",
+        description="Image file extension for detection frames (jpg, png).",
+    )

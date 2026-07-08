@@ -20,3 +20,7 @@ class OutputConfig(BaseModel):
         default=Path("artifacts/logs"),
         description="Directory for session log files.",
     )
+    image_extension: str = Field(
+        default="jpg",
+        description="Image file extension for output frames (jpg, png).",
+    )

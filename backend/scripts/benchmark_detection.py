@@ -153,6 +153,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     renderer = DetectionRenderer(
         output_dir=config.detection.output_dir,
         session_name=config.session_name,
+        image_extension=getattr(config.detection, "image_extension", "png"),
     )
     quality_report = DetectionQualityReport()
     processor = BenchmarkDetectionProcessor(

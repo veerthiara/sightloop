@@ -15,12 +15,26 @@ def _safe_slug(value: str) -> str:
     return slug.strip("-") or "session"
 
 
+def _normalize_image_extension(ext: str) -> str:
+    """Normalize image extension to a supported format."""
+    ext = ext.lower().lstrip(".")
+    if ext in ("jpg", "jpeg"):
+        return "jpg"
+    if ext == "png":
+        return "png"
+    # Default to png for unknown extensions (lossless for annotations)
+    return "png"
+
+
 class DetectionRenderer:
     """Draw detection boxes and labels and save annotated output."""
 
-    def __init__(self, output_dir: Path | str, session_name: str) -> None:
+    def __init__(
+        self, output_dir: Path | str, session_name: str, image_extension: str = "png"
+    ) -> None:
         self._base_output_dir = Path(output_dir)
         self._session_slug = _safe_slug(session_name)
+        self._image_extension = _normalize_image_extension(image_extension)
         self.saved_frame_count = 0
 
     @property
@@ -43,6 +57,10 @@ class DetectionRenderer:
     def no_target_dir(self) -> Path:
         return self.session_dir / "no_target"
 
+    @property
+    def image_extension(self) -> str:
+        return self._image_extension
+
     def annotate_frame(self, frame: Frame, detections: list[Detection]) -> Image.Image:
         rgb = frame.image[:, :, ::-1].copy()
         image = Image.fromarray(rgb)
@@ -63,13 +81,13 @@ class DetectionRenderer:
 
     def build_output_path(self, frame: Frame) -> Path:
         ts = frame.timestamp.astimezone().strftime("%Y%m%dT%H%M%S_%f%z")
-        return self.annotated_dir / f"frame_{frame.frame_id:06d}_{ts}.png"
+        return self.annotated_dir / f"frame_{frame.frame_id:06d}_{ts}.{self._image_extension}"
 
     def save_annotated_frame(self, frame: Frame, detections: list[Detection]) -> Path:
         image = self.annotate_frame(frame, detections)
         output_path = self.build_output_path(frame)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        image.save(output_path, format="PNG")
+        image.save(output_path, format="JPEG" if self._image_extension == "jpg" else "PNG")
         self._save_grouped_copy(image, output_path.name, detections)
         self.saved_frame_count += 1
         return output_path
@@ -92,4 +110,4 @@ class DetectionRenderer:
 
         for target in targets:
             target.parent.mkdir(parents=True, exist_ok=True)
-            image.save(target, format="PNG")
+            image.save(target, format="JPEG" if self._image_extension == "jpg" else "PNG")

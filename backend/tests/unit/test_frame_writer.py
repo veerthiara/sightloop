@@ -32,9 +32,9 @@ class TestFrameWriter:
 
         assert path.parent == tmp_path / "session-with-spaces"
         assert path.name.startswith("frame_000000_")
-        assert path.suffix == ".ppm"
+        assert path.suffix == ".jpg"
 
-    def test_write_frame_saves_ppm_file(self, tmp_path: Path) -> None:
+    def test_write_frame_saves_jpg_file(self, tmp_path: Path) -> None:
         writer = FrameWriter(tmp_path, "session-a", save_every_n_frames=1)
         frame = self._make_frame(frame_id=0)
 
@@ -43,7 +43,20 @@ class TestFrameWriter:
         assert path is not None
         assert path.exists()
         assert writer.saved_frame_count == 1
-        assert path.read_bytes().startswith(b"P6\n")
+        # JPG files start with FF D8 FF
+        assert path.read_bytes().startswith(b"\xff\xd8\xff")
+
+    def test_write_frame_saves_png_when_configured(self, tmp_path: Path) -> None:
+        writer = FrameWriter(tmp_path, "session-a", save_every_n_frames=1, image_extension="png")
+        frame = self._make_frame(frame_id=0)
+
+        path = writer.write_frame(frame)
+
+        assert path is not None
+        assert path.exists()
+        assert path.suffix == ".png"
+        # PNG files start with PNG signature
+        assert path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
 
     def test_write_frame_skips_when_interval_does_not_match(self, tmp_path: Path) -> None:
         writer = FrameWriter(tmp_path, "session-a", save_every_n_frames=3)

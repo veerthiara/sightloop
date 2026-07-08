@@ -67,11 +67,13 @@ def build_frame_writer(config: AppConfig) -> FrameWriter | None:
         return None
 
     output_dir = config.debug.output_dir or config.output.frames_dir
+    image_extension = getattr(config.debug, "image_extension", "jpg")
     return FrameWriter(
         output_dir=output_dir,
         session_name=config.session_name,
         save_every_n_frames=config.debug.save_every_n_frames,
         enabled=config.debug.enabled,
+        image_extension=image_extension,
     )
 
 
