@@ -33,6 +33,27 @@ detection:
     - bottle
   run_every_n_frames: 30
   output_dir: artifacts/detections
+  image_extension: png
+
+tracking:
+  enabled: true
+  output_dir: artifacts/tracking
+  max_missed_frames: 30
+  match_distance_threshold: 100.0
+
+zones:
+  - name: bottle_home
+    type: rectangle
+    x1: 500
+    y1: 400
+    x2: 850
+    y2: 720
+  - name: desk
+    type: rectangle
+    x1: 250
+    y1: 300
+    x2: 1200
+    y2: 720
 
 calibration:
   output_dir: artifacts/calibration

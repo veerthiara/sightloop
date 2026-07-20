@@ -31,6 +31,10 @@ uv run python scripts/capture_calibration_frames.py --config configs/dev.yaml \
 uv run python scripts/capture_calibration_frames.py --config configs/dev.yaml \
   --position-label desk-evening-light --session-name calib-desk-evening \
   --max-frames 300 --save-every-n-frames 10 --notes "Evening lamp light"
+
+# Run tracking with zones (Phase 2 Rev01)
+export TAPO_RTSP_URL='rtsp://USER:PASSWORD@CAMERA_IP:554/stream1'
+uv run python scripts/run_tracking.py --config configs/jetson.yaml --max-frames 300
 ```
 
 ## Artifact Structure
@@ -51,11 +55,14 @@ artifacts/
 │   └── {session_name}/
 │       ├── detection-baseline.json
 │       └── detection-baseline.md
-└── calibration/         # Calibration reference frames
+├── calibration/         # Calibration reference frames
+│   └── {session_name}/
+│       ├── frames/              # Clean reference frames
+│       ├── manifest.json        # Capture metadata
+│       └── contact_sheet.jpg    # Visual overview (optional)
+└── tracking/            # Tracking outputs from run_tracking.py
     └── {session_name}/
-        ├── frames/              # Clean reference frames
-        ├── manifest.json        # Capture metadata
-        └── contact_sheet.jpg    # Visual overview (optional)
+        ├── annotated/   # Frames with zones, tracks, and IDs
 ```
 
 ## Calibration Review
