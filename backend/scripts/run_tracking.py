@@ -91,6 +91,8 @@ class TrackingProcessor:
         # Evaluate zones
         for track in tracks:
             zone_names = self._zone_manager.evaluate_track(track)
+            track.check_zones(self._zone_manager.zones)  # Update track's zone state
+
             if "bottle_home" in zone_names:
                 self.bottle_home_hits += 1
             if "desk" in zone_names:

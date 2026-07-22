@@ -88,11 +88,21 @@ class ZoneRenderer:
                 label,
                 fill=color,
             )
+            # Draw bbox center dot and label
+            cx = (box.x1 + box.x2) // 2
+            cy = (box.y1 + box.y2) // 2
+            draw.ellipse([cx - 4, cy - 4, cx + 4, cy + 4], fill=color, outline="white")
+            draw.text((cx + 6, cy - 8), f"{detection.class_name}", fill=color)
 
         # Draw track IDs
         for track in tracks:
             box = track.bbox
             color = self.TRACK_COLORS.get(track.class_name, self.TRACK_COLORS["default"])
+            # Draw track bbox center dot
+            cx = (box.x1 + box.x2) // 2
+            cy = (box.y1 + box.y2) // 2
+            draw.ellipse([cx - 5, cy - 5, cx + 5, cy + 5], fill=color, outline="white", width=2)
+            draw.text((cx + 7, cy - 10), f"T{track.track_id}:{track.class_name}", fill=color)
             # Draw track ID with zone info if track is in any zones
             track_zones = getattr(track, "zones", [])
             zone_label = f" [{', '.join(track_zones)}]" if track_zones else ""

@@ -29,5 +29,8 @@ artifacts/
 data/
 Homework.md
 
+# Model weights
+*.pt
+
 # Docker
 *.log

@@ -23,45 +23,38 @@ debug:
 
 detection:
   enabled: true
-  model_name: yolov8n.pt
+  model_name: yolov8m.pt
   candidate_models:
     - yolov8n.pt
     - yolov8s.pt
-  confidence_threshold: 0.35
+    - yolov8m.pt
+  confidence_threshold: 0.25
   classes:
     - person
     - bottle
+    - cup
   run_every_n_frames: 30
   output_dir: artifacts/detections
   image_extension: png
+  zones:
+    - name: bottle_home
+      type: rectangle
+      x1: 750
+      y1: 350
+      x2: 1150
+      y2: 550
+    - name: desk
+      type: rectangle
+      x1: 814
+      y1: 473
+      x2: 1561
+      y2: 1070
 
 tracking:
   enabled: true
   output_dir: artifacts/tracking
   max_missed_frames: 30
   match_distance_threshold: 100.0
-
-# Zone definitions for the fixed RTSP camera (right side of desk near screen).
-# These are PLACEHOLDER coordinates that MUST be manually tuned.
-# To tune:
-#   1. Run: uv run python scripts/run_tracking.py --config configs/jetson.yaml --max-frames 300
-#   2. Review annotated frames in: artifacts/tracking/jetson-session/
-#   3. Look for green (bottle_home) and blue (desk) rectangles on frames
-#   4. Adjust x1, y1, x2, y2 below so zones cover the bottle rest position and desk surface
-#   5. Re-run tracking to verify
-zones:
-  - name: bottle_home
-    type: rectangle
-    x1: 500
-    y1: 400
-    x2: 850
-    y2: 720
-  - name: desk
-    type: rectangle
-    x1: 250
-    y1: 300
-    x2: 1200
-    y2: 720
 
 calibration:
   output_dir: artifacts/calibration
