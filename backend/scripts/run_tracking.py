@@ -27,6 +27,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Optional cap on processed frames.",
     )
+    parser.add_argument(
+        "--write-zone-report",
+        action="store_true",
+        help="Write zone calibration JSON and Markdown reports.",
+    )
+    parser.add_argument(
+        "--zone-notes",
+        default=None,
+        help="Optional notes to include in the zone calibration report.",
+    )
     return parser.parse_args(argv)
 
 
@@ -62,6 +72,7 @@ class TrackingProcessor:
         self.bottle_home_hits = 0
         self.desk_hits = 0
         self.track_class_counts: dict[str, int] = {}
+        self._zone_hits_by_class: dict[str, dict[str, int]] = {}
 
     def __call__(self, frame) -> None:
         if frame.frame_id % self._run_every_n_frames != 0:
@@ -85,6 +96,13 @@ class TrackingProcessor:
             if "desk" in zone_names:
                 self.desk_hits += 1
 
+            # Track zone hits by class
+            for zone_name in zone_names:
+                self._zone_hits_by_class.setdefault(zone_name, {})
+                self._zone_hits_by_class[zone_name][track.class_name] = (
+                    self._zone_hits_by_class[zone_name].get(track.class_name, 0) + 1
+                )
+
         # Save annotated frame
         self._renderer.save_rendered_frame(
             frame=frame,
@@ -98,6 +116,10 @@ class TrackingProcessor:
             count = self.track_class_counts.get(track.class_name, 0)
             self.track_class_counts[track.class_name] = count + 1
 
+    @property
+    def zone_hits_by_class(self) -> dict[str, dict[str, int]]:
+        return self._zone_hits_by_class
+
 
 def main(argv: Sequence[str] | None = None) -> int:
     from sightloop_vision.app.runner import build_camera_source, build_frame_writer
@@ -108,6 +130,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     from sightloop_vision.services.rendering import ZoneRenderer
     from sightloop_vision.services.tracking import SimpleTracker
     from sightloop_vision.services.zones import ZoneManager, load_zones_from_config
+    from sightloop_vision.services.zones.zone_report import build_zone_calibration_report
+    from sightloop_vision.services.zones.zone_report_writer import ZoneReportWriter
 
     args = parse_args(argv)
     config = load_config(args.config)
@@ -166,19 +190,45 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"Zones loaded: {[z.name for z in zones]}")
     frames_processed = pipeline.run(max_frames=args.max_frames)
     print(f"Stopped tracking session '{config.session_name}'")
-    print(
-        {
-            "frames_processed": frames_processed,
-            "detection_frames_processed": processor.detection_frames_processed,
-            "total_tracks_created": tracker.total_tracks_created,
-            "active_tracks": len(tracker.get_tracks()),
-            "bottle_tracks": processor.track_class_counts.get("bottle", 0),
-            "person_tracks": processor.track_class_counts.get("person", 0),
-            "bottle_home_zone_hits": processor.bottle_home_hits,
-            "desk_zone_hits": processor.desk_hits,
-            "annotated_output_dir": str(renderer.session_dir),
-        }
-    )
+
+    # Print summary
+    summary = {
+        "frames_processed": frames_processed,
+        "detection_frames_processed": processor.detection_frames_processed,
+        "total_tracks_created": tracker.total_tracks_created,
+        "active_tracks": len(tracker.get_tracks()),
+        "bottle_tracks": processor.track_class_counts.get("bottle", 0),
+        "person_tracks": processor.track_class_counts.get("person", 0),
+        "bottle_home_zone_hits": processor.bottle_home_hits,
+        "desk_zone_hits": processor.desk_hits,
+        "annotated_output_dir": str(renderer.session_dir),
+    }
+    print(summary)
+
+    # Write zone calibration report if requested
+    if args.write_zone_report:
+        report = build_zone_calibration_report(
+            session_name=config.session_name,
+            camera_source=config.camera.source,
+            zones=zones,
+            frames_processed=frames_processed,
+            detection_frames_processed=processor.detection_frames_processed,
+            zone_hits_by_name={
+                "bottle_home": processor.bottle_home_hits,
+                "desk": processor.desk_hits,
+            },
+            zone_hits_by_class=processor.zone_hits_by_class,
+            track_count_by_class=processor.track_class_counts,
+            bottle_home_hits=processor.bottle_home_hits,
+            desk_hits=processor.desk_hits,
+            notes=args.zone_notes,
+        )
+        writer = ZoneReportWriter()
+        json_path, md_path = writer.write_all(report)
+        print("Zone calibration report written:")
+        print(f"  JSON: {json_path}")
+        print(f"  Markdown: {md_path}")
+
     return 0
 
 

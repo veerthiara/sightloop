@@ -35,6 +35,14 @@ uv run python scripts/capture_calibration_frames.py --config configs/dev.yaml \
 # Run tracking with zones (Phase 2 Rev01)
 export TAPO_RTSP_URL='rtsp://USER:PASSWORD@CAMERA_IP:554/stream1'
 uv run python scripts/run_tracking.py --config configs/jetson.yaml --max-frames 300
+
+# Run tracking with zone calibration report (Phase 2 Rev02)
+export TAPO_RTSP_URL='rtsp://USER:PASSWORD@CAMERA_IP:554/stream1'
+uv run python scripts/run_tracking.py \
+  --config configs/jetson.yaml \
+  --max-frames 300 \
+  --write-zone-report \
+  --zone-notes "Fixed right-side desk camera. Initial zone calibration run."
 ```
 
 ## Artifact Structure
@@ -63,6 +71,10 @@ artifacts/
 └── tracking/            # Tracking outputs from run_tracking.py
     └── {session_name}/
         ├── annotated/   # Frames with zones, tracks, and IDs
+└── zones/               # Zone calibration reports
+    └── {session_name}/
+        ├── zone-calibration-report.json
+        └── zone-calibration-report.md
 ```
 
 ## Calibration Review
@@ -74,3 +86,37 @@ docs/implementation/phase-1/calibration-review-template.md
 ```
 
 **Note:** Rev04 captures evidence automatically, but zone selection remains manual.
+
+## Zone Calibration Workflow (Phase 2 Rev02)
+
+1. **Run tracking with zone report:**
+   ```bash
+   uv run python scripts/run_tracking.py \
+     --config configs/jetson.yaml \
+     --max-frames 300 \
+     --write-zone-report \
+     --zone-notes "Fixed right-side desk camera. Initial zone calibration run."
+   ```
+
+2. **Review annotated frames** in `artifacts/tracking/{session}/`:
+   - Green rectangle = `bottle_home` zone
+   - Blue rectangle = `desk` zone
+   - Track labels show zone membership (e.g., `ID:1 (age:5) bottle_home`)
+
+3. **Check zone report** in `artifacts/zones/{session}/zone-calibration-report.md`:
+   - Zone hit counts by class
+   - Track counts by class
+   - Review checklist for manual verification
+
+4. **Adjust zones** in `configs/jetson.yaml`:
+   ```yaml
+   zones:
+     - name: bottle_home
+       type: rectangle
+       x1: 550   # Adjust left edge
+       y1: 420   # Adjust top edge
+       x2: 900   # Adjust right edge
+       y2: 750   # Adjust bottom edge
+   ```
+
+5. **Re-run and verify** - repeat until zones align with actual object positions.

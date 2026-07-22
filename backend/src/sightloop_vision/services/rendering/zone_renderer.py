@@ -93,10 +93,12 @@ class ZoneRenderer:
         for track in tracks:
             box = track.bbox
             color = self.TRACK_COLORS.get(track.class_name, self.TRACK_COLORS["default"])
-            # Draw track ID
+            # Draw track ID with zone info if track is in any zones
+            track_zones = getattr(track, "zones", [])
+            zone_label = f" [{', '.join(track_zones)}]" if track_zones else ""
             draw.text(
                 (box.x1 + 4, box.y2 + 2),
-                f"ID:{track.track_id} (age:{track.age})",
+                f"ID:{track.track_id} (age:{track.age}){zone_label}",
                 fill=color,
             )
 

@@ -90,3 +90,8 @@ class Track:
             "hit_streak": self.hit_streak,
             "age": self.age,
         }
+
+    @property
+    def zones(self) -> list[str]:
+        """Return list of zone names this track is currently in."""
+        return list(self._zone_entered.keys())

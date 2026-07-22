@@ -41,6 +41,14 @@ tracking:
   max_missed_frames: 30
   match_distance_threshold: 100.0
 
+# Zone definitions for the fixed RTSP camera (right side of desk near screen).
+# These are PLACEHOLDER coordinates that MUST be manually tuned.
+# To tune:
+#   1. Run: uv run python scripts/run_tracking.py --config configs/jetson.yaml --max-frames 300
+#   2. Review annotated frames in: artifacts/tracking/jetson-session/
+#   3. Look for green (bottle_home) and blue (desk) rectangles on frames
+#   4. Adjust x1, y1, x2, y2 below so zones cover the bottle rest position and desk surface
+#   5. Re-run tracking to verify
 zones:
   - name: bottle_home
     type: rectangle
