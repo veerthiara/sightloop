@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -11,33 +12,57 @@ if TYPE_CHECKING:
     from sightloop_vision.core.config import AppConfig
 
 
+logger = logging.getLogger(__name__)
+
+
 def load_zones_from_config(config: "AppConfig") -> list[Zone]:
     """Load zones from app config.
 
-    Zones are defined in the detection section of the config:
+    Supports both top-level zones and detection.zones:
+    zones:                                    # top-level (preferred)
+      - name: "bottle_home"
+        type: "rectangle"
+        x1: 100
+        y1: 100
+        x2: 300
+        y2: 300
     detection:
-      zones:
+      zones:                                 # also supported (legacy)
         - name: "bottle_home"
           type: "rectangle"
           x1: 100
           y1: 100
           x2: 300
           y2: 300
-        - name: "desk_area"
-          type: "rectangle"
-          x1: 200
-          y1: 200
-          x2: 600
-          y2: 600
+
+    If neither is found, logs a warning and returns empty list.
     """
-    zones_data = getattr(config.detection, "zones", None)
+    # Try top-level zones first (preferred)
+    zones_data = getattr(config, "zones", None)
+
+    # Fall back to detection.zones (legacy)
     if not zones_data:
+        zones_data = getattr(config.detection, "zones", None)
+
+    if not zones_data:
+        logger.warning(
+            "No zones configured. Define zones at top-level 'zones:' or under 'detection.zones:'. "
+            "Zone evaluation will be skipped."
+        )
         return []
 
     zones = []
     for zone_data in zones_data:
-        zone = Zone.from_dict(zone_data)
-        zones.append(zone)
+        try:
+            zone = Zone.from_dict(zone_data)
+            zones.append(zone)
+        except Exception as e:
+            logger.warning("Failed to load zone %s: %s", zone_data.get("name", "unknown"), e)
+
+    if zones:
+        logger.info("Loaded %d zone(s): %s", len(zones), [z.name for z in zones])
+    else:
+        logger.warning("No valid zones loaded from config")
 
     return zones
 

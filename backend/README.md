@@ -43,6 +43,18 @@ uv run python scripts/run_tracking.py \
   --max-frames 300 \
   --write-zone-report \
   --zone-notes "Fixed right-side desk camera. Initial zone calibration run."
+
+# Run diagnostics only (no camera)
+uv run python scripts/run_tracking.py --config configs/jetson.yaml --diagnostics-only
+
+# Run with zone validation
+uv run python scripts/run_tracking.py \
+  --config configs/jetson.yaml \
+  --max-frames 300 \
+  --require-zones \
+  --warn-if-no-bottle \
+  --write-zone-report \
+  --zone-notes "Fixed right-side desk camera. Zone sanity run."
 ```
 
 ## Artifact Structure
@@ -74,7 +86,8 @@ artifacts/
 └── zones/               # Zone calibration reports
     └── {session_name}/
         ├── zone-calibration-report.json
-        └── zone-calibration-report.md
+        ├── zone-calibration-report.md
+        └── zone-state-summary.json
 ```
 
 ## Calibration Review
@@ -87,9 +100,14 @@ docs/implementation/phase-1/calibration-review-template.md
 
 **Note:** Rev04 captures evidence automatically, but zone selection remains manual.
 
-## Zone Calibration Workflow (Phase 2 Rev02)
+## Zone Calibration Workflow (Phase 2 Rev03)
 
-1. **Run tracking with zone report:**
+1. **Run tracking with diagnostics:**
+   ```bash
+   uv run python scripts/run_tracking.py --config configs/jetson.yaml --diagnostics-only
+   ```
+
+2. **Run tracking with zone report:**
    ```bash
    uv run python scripts/run_tracking.py \
      --config configs/jetson.yaml \
@@ -98,17 +116,19 @@ docs/implementation/phase-1/calibration-review-template.md
      --zone-notes "Fixed right-side desk camera. Initial zone calibration run."
    ```
 
-2. **Review annotated frames** in `artifacts/tracking/{session}/`:
+3. **Review annotated frames** in `artifacts/tracking/{session}/`:
    - Green rectangle = `bottle_home` zone
    - Blue rectangle = `desk` zone
-   - Track labels show zone membership (e.g., `ID:1 (age:5) bottle_home`)
+   - Track labels show zone membership (e.g., `ID:1 (age:5) bottle_home,desk`)
 
-3. **Check zone report** in `artifacts/zones/{session}/zone-calibration-report.md`:
+4. **Check zone report** in `artifacts/zones/{session}/zone-calibration-report.md`:
    - Zone hit counts by class
    - Track counts by class
+   - Zone entry/exit events
+   - Frames inside zone per track
    - Review checklist for manual verification
 
-4. **Adjust zones** in `configs/jetson.yaml`:
+5. **Adjust zones** in `configs/jetson.yaml`:
    ```yaml
    zones:
      - name: bottle_home
@@ -119,4 +139,23 @@ docs/implementation/phase-1/calibration-review-template.md
        y2: 750   # Adjust bottom edge
    ```
 
-5. **Re-run and verify** - repeat until zones align with actual object positions.
+6. **Re-run and verify** - repeat until zones align with actual object positions.
+
+## New CLI Options (Rev03)
+
+| Flag | Description |
+|------|-------------|
+| `--diagnostics-only` | Load config, print diagnostics, exit without camera |
+| `--require-zones` | Fail fast if no zones configured |
+| `--warn-if-no-bottle` | Warning if zero bottle tracks created |
+| `--write-zone-report` | Write JSON + Markdown zone calibration reports |
+| `--zone-notes` | Notes to include in zone calibration report |
+
+## Why Visible Bottle ≠ YOLO Detection
+
+- **Occlusion**: Hand holding bottle covers most visual features
+- **Pose change**: Bottle tilted/horizontal vs vertical training pose
+- **Confidence drop**: Partial visibility drops confidence below threshold
+- **Class confusion**: Blue bottle may resemble "cup" or "vase" to COCO-trained model
+
+This revision adds diagnostics to catch these issues before pickup inference.
